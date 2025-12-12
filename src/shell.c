@@ -19,7 +19,9 @@ void shell_init(shell_t* sh){
 void shell_rx_bytes(shell_t* sh, const char* s){
     while (*s) {
         if (!rb_put(&sh->rx, (uint8_t)*s++)) {
-            // overflow na RX — jeżeli odetnie linię, wykryjemy to w tick
+            // overflow na RX — przy odrzuceniu bajtu oznaczamy potencjalnie
+            // uciętą linię. Zliczamy takie zdarzenia jako "broken_lines".
+            sh->broken_lines++;
         }
     }
 }
